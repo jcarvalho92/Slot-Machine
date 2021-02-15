@@ -9,13 +9,14 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIApplicationDelegate{
 
  
     @IBOutlet var currentJackpotLabel: UILabel!
     @IBOutlet var currentBetLabel: UILabel!
     @IBOutlet var currentCreditLabel: UILabel!
     @IBOutlet var spinBtnLabel: UILabel!
+    @IBOutlet var messageLabel: UILabel!
     
     @IBOutlet var image1: UIImageView!
     @IBOutlet var image2: UIImageView!
@@ -41,18 +42,45 @@ class ViewController: UIViewController {
     var kiwis = 0
     var coconuts = 0
     var peaches = 0
+    var bells = 0
     var winningAmount = 0
-    var currentBet = 0
-    var currentCredit = 500
-    var currentJackpot = 100000
-    let arrayFruits = ["strawberry", "peach", "kiwi", "orange", "coconut", "banana"]
+    
+    var currentBet = 0 {
+        didSet {
+            currentBetLabel.text = "$\(currentBet)"
+        }
+    }
+    var currentCredit = 500 {
+        didSet {
+            currentCreditLabel.text = "$\(currentCredit)"
+        }
+    }
+    var currentJackpot = 100000 {
+        didSet {
+            currentJackpotLabel.text = "$\(currentJackpot)"
+        }
+    }
+    var message = "" {
+        didSet {
+            messageLabel.text = message
+        }
+    }
+    
+    let arrayFruits = ["bell","strawberry", "peach", "kiwi", "orange", "coconut", "banana"]
    
 
     @IBAction func btnReset(_ sender: UIButton) {
+         currentCredit = 500
+         currentJackpot = 100000
+         message = "Play Now!!!"
+         changeImages(changeAll: true)
+         resetBet()
+         disableSpinBtn()
     }
     
     
     @IBAction func btnExit(_ sender: UIButton) {
+        UIControl().sendAction(#selector(NSXPCConnection.suspend), to: UIApplication.shared, for: nil)
     }
     
     
@@ -60,11 +88,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         disableSpinBtn()
-        
-        currentCreditLabel.text = "$" + String(currentCredit)
-        currentJackpotLabel.text = "$" + String(currentJackpot)
-        
-        
+
         let tapSpin = UITapGestureRecognizer(target: self, action: #selector(self.spinBtn(_:)))
         spinBtn.addGestureRecognizer(tapSpin)
         
@@ -116,7 +140,7 @@ class ViewController: UIViewController {
 
         for spin in 0...2
         {
-            outCome[spin] = Int(floor((Double.random(in: 0...1) * 62) + 1))
+            outCome[spin] = Int(floor((Double.random(in: 0...1) * 63) + 1))
             switch (outCome[spin])
             {
             case  _checkRange(value: outCome[spin], lowerBounds: 1, upperBounds: 27):
@@ -143,33 +167,35 @@ class ViewController: UIViewController {
                     betLine[spin] = "strawberry"
                      strawberrys += 1
                     break
+            case  _checkRange(value: outCome[spin], lowerBounds: 63, upperBounds: 63):
+                    betLine[spin] = "bell"
+                    bells += 1
+            break
             default:
                 print ("Default")
             }
         }
         print(betLine)
         
-        //first line of images
-        image1.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
-        image2.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
-        image3.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
+        changeImages(changeAll: false)
         
         //BET LINE
         image4.image = UIImage(named: betLine[0])
         image5.image = UIImage(named: betLine[1])
         image6.image = UIImage(named: betLine[2])
-        
-        //third line of images
-        image7.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
-        image8.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
-        image9.image = UIImage(named: arrayFruits[Int.random(in: 0...5)])
 
     }
 
     //This function calculates the player's winnings.
     func determineWinnings()
     {
-        if ( strawberrys == 3)
+        message = "YOU WIN!!!"
+        
+        if (bells == 3){
+           winningAmount = currentJackpot
+            message = "JACKPOT WINNER!!!!!!!"
+        }
+        else if ( strawberrys == 3)
         {
             switch currentBet {
             case 5:  winningAmount = 1000
@@ -219,12 +245,12 @@ class ViewController: UIViewController {
         }
         else
         {
-            print("LOSS! :( ")
+            message = "Sorry, try again!!!"
+            
             currentJackpot = currentJackpot + currentBet
-            currentJackpotLabel.text = "$" + String(currentJackpot)
-                
             currentCredit = currentCredit - currentBet
-            currentCreditLabel.text = "$" + String(currentCredit)
+
+            print("LOSS! :( ")
             return
         }
               
@@ -233,7 +259,7 @@ class ViewController: UIViewController {
         print("Winning Amount: " + String(winningAmount))
              
         currentCredit = currentCredit + winningAmount
-        currentCreditLabel.text  = "$" + String(currentCredit)
+        currentJackpot = currentJackpot - winningAmount
     }
     
     func disableSpinBtn(){
@@ -255,10 +281,7 @@ class ViewController: UIViewController {
     
     @objc func plusFiveBtn(_ sender: UITapGestureRecognizer? = nil){
         currentBet = 5
-        currentBetLabel.text = String(currentBet)
-        minusFive.isUserInteractionEnabled = true
-        minusTwentyFive.isUserInteractionEnabled = false
-        minusFifty.isUserInteractionEnabled = false
+        enableBetButtons(enableBetFive: true, enableBetTwentyFive: false, enableBetFifty: false)
         enableSpinBtn()
     }
     
@@ -269,10 +292,7 @@ class ViewController: UIViewController {
      
     @objc func plusTwentyFiveBtn(_ sender: UITapGestureRecognizer? = nil){
         currentBet = 25
-        currentBetLabel.text = String(currentBet)
-        minusFive.isUserInteractionEnabled = false
-        minusTwentyFive.isUserInteractionEnabled = true
-        minusFifty.isUserInteractionEnabled = false
+        enableBetButtons(enableBetFive: false, enableBetTwentyFive: true, enableBetFifty: false)
         enableSpinBtn()
      }
   
@@ -283,10 +303,7 @@ class ViewController: UIViewController {
        
     @objc func plusFiftyBtn(_ sender: UITapGestureRecognizer? = nil){
         currentBet = 50
-        currentBetLabel.text = String(currentBet)
-        minusFive.isUserInteractionEnabled = false
-        minusTwentyFive.isUserInteractionEnabled = false
-        minusFifty.isUserInteractionEnabled = true
+        enableBetButtons(enableBetFive: false, enableBetTwentyFive: false, enableBetFifty: true)
         enableSpinBtn()
         
        }
@@ -298,13 +315,40 @@ class ViewController: UIViewController {
         return (value >= lowerBounds && value <= upperBounds) ? value : -1
     }
     
+    func enableBetButtons(enableBetFive: Bool, enableBetTwentyFive: Bool, enableBetFifty: Bool)
+    {
+       minusFive.isUserInteractionEnabled = enableBetFive
+       minusTwentyFive.isUserInteractionEnabled = enableBetTwentyFive
+       minusFifty.isUserInteractionEnabled = enableBetFifty
+        
+    }
+    
     func resetBet(){
         currentBet = 0
-        currentBetLabel.text = String(currentBet)
+    }
+    
+    func changeImages(changeAll: Bool){
+       //first line of images
+        image1.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       image2.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       image3.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       
+        if (changeAll){
+            //changing images from bet line when reseting
+            image4.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+            image5.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+            image6.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+        }
+
+       //third line of images
+       image7.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       image8.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       image9.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
     }
     
     func resetCounts()
     {
+         bells = 0
          strawberrys = 0
          bananas = 0
          oranges = 0
