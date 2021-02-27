@@ -36,6 +36,7 @@ class ViewController: UIViewController, UIApplicationDelegate{
     @IBOutlet var minusFifty: UIImageView!
     @IBOutlet var plusFifty: UIImageView!
     
+    var thumbsdown = 0
     var strawberrys = 0
     var bananas = 0
     var oranges = 0
@@ -66,12 +67,13 @@ class ViewController: UIViewController, UIApplicationDelegate{
         }
     }
     
-    let arrayFruits = ["bell","strawberry", "peach", "kiwi", "orange", "coconut", "banana"]
+    let arrayFruits = ["bell","strawberry", "peach", "kiwi", "orange", "coconut", "banana","thumbsdown"]
    
+     var db: DbHelper = DbHelper()
 
     @IBAction func btnReset(_ sender: UIButton) {
          currentCredit = 500
-         currentJackpot = 100000
+         //currentJackpot = 100000
          message = "Play Now!!!"
          changeImages(changeAll: true)
          resetBet()
@@ -88,6 +90,15 @@ class ViewController: UIViewController, UIApplicationDelegate{
         super.viewDidLoad()
         
         disableSpinBtn()
+        
+        var payout_amount: Double
+        payout_amount = db.read()
+        if(payout_amount == 0){
+            db.insert(payout_amount: Double(currentJackpot))
+        }
+        else{
+            currentJackpot = Int(payout_amount)
+        }
 
         let tapSpin = UITapGestureRecognizer(target: self, action: #selector(self.spinBtn(_:)))
         spinBtn.addGestureRecognizer(tapSpin)
@@ -140,39 +151,43 @@ class ViewController: UIViewController, UIApplicationDelegate{
 
         for spin in 0...2
         {
-            outCome[spin] = Int(floor((Double.random(in: 0...1) * 63) + 1))
+            outCome[spin] = Int(floor((Double.random(in: 0...1) * 65) + 1))
             switch (outCome[spin])
             {
-            case  _checkRange(value: outCome[spin], lowerBounds: 1, upperBounds: 27):
-                    betLine[spin] = "banana"
-                     bananas += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 28, upperBounds: 37):
-                    betLine[spin] = "coconut"
-                     coconuts += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 38, upperBounds: 46):
-                    betLine[spin] = "orange"
-                     oranges += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 47, upperBounds: 54):
-                    betLine[spin] = "kiwi"
-                     kiwis += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 55, upperBounds: 59):
-                    betLine[spin] = "peach"
-                     peaches += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 60, upperBounds: 62):
-                    betLine[spin] = "strawberry"
-                     strawberrys += 1
-                    break
-            case  _checkRange(value: outCome[spin], lowerBounds: 63, upperBounds: 63):
-                    betLine[spin] = "bell"
-                    bells += 1
-            break
-            default:
-                print ("Default")
+                case  _checkRange(value: outCome[spin], lowerBounds: 1, upperBounds: 27):  // 41.5% probability
+                        betLine[spin] = "thumbsdown"
+                         thumbsdown += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 28, upperBounds: 37): // 15.4% probability
+                        betLine[spin] = "banana"
+                         bananas += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 38, upperBounds: 46): // 13.8% probability
+                        betLine[spin] = "coconut"
+                         coconuts += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 47, upperBounds: 54): // 12.3% probability
+                        betLine[spin] = "orange"
+                         oranges += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 55, upperBounds: 59): //  7.7% probability
+                        betLine[spin] = "kiwi"
+                         kiwis += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 60, upperBounds: 62): //  4.6% probability
+                        betLine[spin] = "peach"
+                         peaches += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 63, upperBounds: 64): //  3.1% probability
+                        betLine[spin] = "strawberry"
+                         strawberrys += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 65, upperBounds: 65): //  1.5% probability
+                        betLine[spin] = "bell"
+                         bells += 1
+                        break
+                default:
+                    print ("Default")
             }
         }
         print(betLine)
@@ -189,77 +204,99 @@ class ViewController: UIViewController, UIApplicationDelegate{
     //This function calculates the player's winnings.
     func determineWinnings()
     {
-        message = "YOU WIN!!!"
-        
-        if (bells == 3){
-           winningAmount = currentJackpot
-            message = "JACKPOT WINNER!!!!!!!"
-        }
-        else if ( strawberrys == 3)
+
+        if ( thumbsdown == 0)
         {
-            switch currentBet {
-            case 5:  winningAmount = 1000
-            case 25: winningAmount = 5000
-            case 50: winningAmount = 25000
-            default: winningAmount = 0}
-        }
-        else if (peaches == 3)
-        {
-            switch currentBet {
-            case 5:  winningAmount = 750
-            case 25: winningAmount = 3750
-            case 50: winningAmount = 18750
-            default: winningAmount = 0}
-        }
-        else if (kiwis == 3)
-        {
-            switch currentBet {
-            case 5:  winningAmount = 500
-            case 25: winningAmount = 2500
-            case 50: winningAmount = 12500
-            default: winningAmount = 0}
-        }
-        else if (oranges == 3)
-        {
-            switch currentBet {
-            case 5:  winningAmount = 250
-            case 25: winningAmount = 1250
-            case 50: winningAmount = 6250
-            default: winningAmount = 0}
-        }
-        else if (coconuts == 3)
-        {
-            switch currentBet {
-            case 5:  winningAmount = 150
-            case 25: winningAmount = 750
-            case 50: winningAmount = 3750
-            default: winningAmount = 0}
-        }
-        else if (bananas == 3)
-        {
-            switch currentBet {
-            case 5:  winningAmount = 100
-            case 25: winningAmount = 500
-            case 50: winningAmount = 2500
-            default: winningAmount = 0}
+            if ( bananas == 3)
+            {
+                 winningAmount =  currentBet * 10
+            }
+            else if ( coconuts == 3)
+            {
+                 winningAmount =  currentBet * 20
+            }
+            else if ( oranges == 3)
+            {
+                 winningAmount =  currentBet * 30
+            }
+            else if ( kiwis == 3)
+            {
+                 winningAmount =  currentBet * 40
+            }
+            else if ( peaches == 3)
+            {
+                 winningAmount =  currentBet * 50
+            }
+            else if ( strawberrys == 3)
+            {
+                 winningAmount =  currentBet * 75
+            }
+            else if ( bells == 3)
+            {
+                  winningAmount = currentJackpot
+                  message = "JACKPOT WINNER!!!!!!!"
+            }
+            else if ( bananas == 2)
+            {
+                 winningAmount =  currentBet * 2
+            }
+            else if ( coconuts == 2)
+            {
+                 winningAmount =  currentBet * 2
+            }
+            else if ( oranges == 2)
+            {
+                 winningAmount =  currentBet * 3
+            }
+            else if ( kiwis == 2)
+            {
+                 winningAmount =  currentBet * 4
+            }
+            else if ( peaches == 2)
+            {
+                 winningAmount =  currentBet * 5
+            }
+            else if ( strawberrys == 2)
+            {
+                 winningAmount =  currentBet * 10
+            }
+            else if ( bells == 2)
+            {
+                 winningAmount =  currentBet * 100
+            }
+            else if ( bells == 1)
+            {
+                 winningAmount =  currentBet * 25
+            }
+            else
+            {
+                 winningAmount =  currentBet * 1
+            }
+            print("WIN! :) ")
+            print("Bet Amount: " + String(currentBet))
+            print("Winning Amount: " + String(winningAmount))
+               
+            message = "YOU WIN!!!"
+            
+            currentCredit = currentCredit + winningAmount
+            currentJackpot = currentJackpot - winningAmount
+            
+            db.update(payout_amount: Double(currentJackpot))
+            
+            return
         }
         else
         {
             message = "Sorry, try again!!!"
             
             currentJackpot = currentJackpot + currentBet
+            db.update(payout_amount: Double(currentJackpot))
+            
             currentCredit = currentCredit - currentBet
 
             print("LOSS! :( ")
-            return
         }
-              
-        print("WIN! :) ")
-        print("Bet Amount: " + String(currentBet))
-        print("Winning Amount: " + String(winningAmount))
-             
-        currentCredit = currentCredit + winningAmount
-        currentJackpot = currentJackpot - winningAmount
+
     }
     
     func disableSpinBtn(){
@@ -329,21 +366,21 @@ class ViewController: UIViewController, UIApplicationDelegate{
     
     func changeImages(changeAll: Bool){
        //first line of images
-        image1.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-       image2.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-       image3.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+        image1.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+       image2.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+       image3.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
        
         if (changeAll){
             //changing images from bet line when reseting
-            image4.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-            image5.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-            image6.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+            image4.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+            image5.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+            image6.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
         }
 
        //third line of images
-       image7.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-       image8.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
-       image9.image = UIImage(named: arrayFruits[Int.random(in: 1...5)])
+       image7.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+       image8.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
+       image9.image = UIImage(named: arrayFruits[Int.random(in: 1...6)])
     }
     
     func resetCounts()
@@ -355,6 +392,7 @@ class ViewController: UIViewController, UIApplicationDelegate{
          kiwis = 0
          coconuts = 0
          peaches = 0
+         thumbsdown = 0
     }
 
 }

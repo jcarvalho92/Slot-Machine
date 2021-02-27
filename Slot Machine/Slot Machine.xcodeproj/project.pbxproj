@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C83657C425E9F0CC0046B574 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C83657C325E9F0CC0046B574 /* libsqlite3.tbd */; };
+		C83657CA25E9F1CE0046B574 /* DbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83657C925E9F1CE0046B574 /* DbHelper.swift */; };
 		C8D9805E25C5DA7000387E7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9805D25C5DA7000387E7D /* AppDelegate.swift */; };
 		C8D9806025C5DA7000387E7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9805F25C5DA7000387E7D /* SceneDelegate.swift */; };
 		C8D9806225C5DA7000387E7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9806125C5DA7000387E7D /* ViewController.swift */; };
@@ -16,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C83657C325E9F0CC0046B574 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		C83657C525E9F14B0046B574 /* Slot Machine-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Slot Machine-Bridging-Header.h"; sourceTree = "<group>"; };
+		C83657C925E9F1CE0046B574 /* DbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbHelper.swift; sourceTree = "<group>"; };
 		C8D9805A25C5DA7000387E7D /* Slot Machine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Slot Machine.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D9805D25C5DA7000387E7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C8D9805F25C5DA7000387E7D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -31,17 +36,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C83657C425E9F0CC0046B574 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C83657C225E9F0CC0046B574 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C83657C325E9F0CC0046B574 /* libsqlite3.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C8D9805125C5DA7000387E7D = {
 			isa = PBXGroup;
 			children = (
 				C8D9805C25C5DA7000387E7D /* Slot Machine */,
 				C8D9805B25C5DA7000387E7D /* Products */,
+				C83657C225E9F0CC0046B574 /* Frameworks */,
+				C83657C525E9F14B0046B574 /* Slot Machine-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -63,6 +79,7 @@
 				C8D9806625C5DA7300387E7D /* Assets.xcassets */,
 				C8D9806825C5DA7300387E7D /* LaunchScreen.storyboard */,
 				C8D9806B25C5DA7300387E7D /* Info.plist */,
+				C83657C925E9F1CE0046B574 /* DbHelper.swift */,
 			);
 			path = "Slot Machine";
 			sourceTree = "<group>";
@@ -99,6 +116,7 @@
 				TargetAttributes = {
 					C8D9805925C5DA7000387E7D = {
 						CreatedOnToolsVersion = 11.7;
+						LastSwiftMigration = 1170;
 					};
 				};
 			};
@@ -141,6 +159,7 @@
 				C8D9806225C5DA7000387E7D /* ViewController.swift in Sources */,
 				C8D9805E25C5DA7000387E7D /* AppDelegate.swift in Sources */,
 				C8D9806025C5DA7000387E7D /* SceneDelegate.swift in Sources */,
+				C83657CA25E9F1CE0046B574 /* DbHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +303,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Slot Machine/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -292,6 +312,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "julianaCarvalho.Slot-Machine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Slot Machine-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -301,6 +323,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "Slot Machine/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -309,6 +332,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "julianaCarvalho.Slot-Machine";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Slot Machine-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
