@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		C83657C425E9F0CC0046B574 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C83657C325E9F0CC0046B574 /* libsqlite3.tbd */; };
 		C83657CA25E9F1CE0046B574 /* DbHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C83657C925E9F1CE0046B574 /* DbHelper.swift */; };
+		C8735E5A25EC901E00A20807 /* Jackpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8735E5925EC901E00A20807 /* Jackpot.swift */; };
+		C8735E5C25EC98BB00A20807 /* HighestWinningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8735E5B25EC98BB00A20807 /* HighestWinningViewController.swift */; };
 		C8D9805E25C5DA7000387E7D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9805D25C5DA7000387E7D /* AppDelegate.swift */; };
 		C8D9806025C5DA7000387E7D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9805F25C5DA7000387E7D /* SceneDelegate.swift */; };
 		C8D9806225C5DA7000387E7D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8D9806125C5DA7000387E7D /* ViewController.swift */; };
@@ -21,6 +23,8 @@
 		C83657C325E9F0CC0046B574 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		C83657C525E9F14B0046B574 /* Slot Machine-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Slot Machine-Bridging-Header.h"; sourceTree = "<group>"; };
 		C83657C925E9F1CE0046B574 /* DbHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DbHelper.swift; sourceTree = "<group>"; };
+		C8735E5925EC901E00A20807 /* Jackpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Jackpot.swift; sourceTree = "<group>"; };
+		C8735E5B25EC98BB00A20807 /* HighestWinningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighestWinningViewController.swift; sourceTree = "<group>"; };
 		C8D9805A25C5DA7000387E7D /* Slot Machine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Slot Machine.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8D9805D25C5DA7000387E7D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C8D9805F25C5DA7000387E7D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -80,6 +84,8 @@
 				C8D9806825C5DA7300387E7D /* LaunchScreen.storyboard */,
 				C8D9806B25C5DA7300387E7D /* Info.plist */,
 				C83657C925E9F1CE0046B574 /* DbHelper.swift */,
+				C8735E5925EC901E00A20807 /* Jackpot.swift */,
+				C8735E5B25EC98BB00A20807 /* HighestWinningViewController.swift */,
 			);
 			path = "Slot Machine";
 			sourceTree = "<group>";
@@ -158,6 +164,8 @@
 			files = (
 				C8D9806225C5DA7000387E7D /* ViewController.swift in Sources */,
 				C8D9805E25C5DA7000387E7D /* AppDelegate.swift in Sources */,
+				C8735E5C25EC98BB00A20807 /* HighestWinningViewController.swift in Sources */,
+				C8735E5A25EC901E00A20807 /* Jackpot.swift in Sources */,
 				C8D9806025C5DA7000387E7D /* SceneDelegate.swift in Sources */,
 				C83657CA25E9F1CE0046B574 /* DbHelper.swift in Sources */,
 			);

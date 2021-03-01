@@ -11,7 +11,6 @@ import UIKit
 
 class ViewController: UIViewController, UIApplicationDelegate{
 
- 
     @IBOutlet var currentJackpotLabel: UILabel!
     @IBOutlet var currentBetLabel: UILabel!
     @IBOutlet var currentCreditLabel: UILabel!
@@ -45,6 +44,7 @@ class ViewController: UIViewController, UIApplicationDelegate{
     var peaches = 0
     var bells = 0
     var winningAmount = 0
+    var highest_winning = 0
     
     var currentBet = 0 {
         didSet {
@@ -61,6 +61,7 @@ class ViewController: UIViewController, UIApplicationDelegate{
             currentJackpotLabel.text = "$\(currentJackpot)"
         }
     }
+
     var message = "" {
         didSet {
             messageLabel.text = message
@@ -69,15 +70,20 @@ class ViewController: UIViewController, UIApplicationDelegate{
     
     let arrayFruits = ["bell","strawberry", "peach", "kiwi", "orange", "coconut", "banana","thumbsdown"]
    
-     var db: DbHelper = DbHelper()
+    var jackpotData = Jackpot(payout_amount: 0, credit: 0, highest_winning: 0)
+    
+    var db: DbHelper = DbHelper()
 
     @IBAction func btnReset(_ sender: UIButton) {
-         currentCredit = 500
-         //currentJackpot = 100000
+       
          message = "Play Now!!!"
          changeImages(changeAll: true)
          resetBet()
          disableSpinBtn()
+         currentJackpot = 100000
+         currentCredit = 500
+         highest_winning = 0
+         db.update(payout_amount: Double(currentJackpot), credit: Double(currentCredit), highest_winning: Double(highest_winning))
     }
     
     
@@ -90,14 +96,15 @@ class ViewController: UIViewController, UIApplicationDelegate{
         super.viewDidLoad()
         
         disableSpinBtn()
+
+        jackpotData = db.read()
         
-        var payout_amount: Double
-        payout_amount = db.read()
-        if(payout_amount == 0){
-            db.insert(payout_amount: Double(currentJackpot))
+        if(jackpotData.payout_amount == 0){
+            db.insert(payout_amount: Double(currentJackpot), credit: Double(currentCredit), highest_winning: 0)
         }
         else{
-            currentJackpot = Int(payout_amount)
+            currentJackpot = Int(jackpotData.payout_amount)
+            currentCredit = Int(jackpotData.credit)
         }
 
         let tapSpin = UITapGestureRecognizer(target: self, action: #selector(self.spinBtn(_:)))
@@ -155,20 +162,20 @@ class ViewController: UIViewController, UIApplicationDelegate{
             switch (outCome[spin])
             {
                 case  _checkRange(value: outCome[spin], lowerBounds: 1, upperBounds: 27):  // 41.5% probability
-                        betLine[spin] = "thumbsdown"
-                         thumbsdown += 1
-                        break
-                case  _checkRange(value: outCome[spin], lowerBounds: 28, upperBounds: 37): // 15.4% probability
                         betLine[spin] = "banana"
                          bananas += 1
                         break
-                case  _checkRange(value: outCome[spin], lowerBounds: 38, upperBounds: 46): // 13.8% probability
+                case  _checkRange(value: outCome[spin], lowerBounds: 28, upperBounds: 37): // 15.4% probability
                         betLine[spin] = "coconut"
                          coconuts += 1
                         break
-                case  _checkRange(value: outCome[spin], lowerBounds: 47, upperBounds: 54): // 12.3% probability
+                case  _checkRange(value: outCome[spin], lowerBounds: 38, upperBounds: 46): // 13.8% probability
                         betLine[spin] = "orange"
                          oranges += 1
+                        break
+                case  _checkRange(value: outCome[spin], lowerBounds: 47, upperBounds: 54): // 12.3% probability
+                        betLine[spin] = "thumbsdown"
+                         thumbsdown += 1
                         break
                 case  _checkRange(value: outCome[spin], lowerBounds: 55, upperBounds: 59): //  7.7% probability
                         betLine[spin] = "kiwi"
@@ -190,7 +197,6 @@ class ViewController: UIViewController, UIApplicationDelegate{
                     print ("Default")
             }
         }
-        print(betLine)
         
         changeImages(changeAll: false)
         
@@ -234,7 +240,7 @@ class ViewController: UIViewController, UIApplicationDelegate{
             else if ( bells == 3)
             {
                   winningAmount = currentJackpot
-                  message = "JACKPOT WINNER!!!!!!!"
+                  message = "JACKPOT WINNER 🤑"
             }
             else if ( bananas == 2)
             {
@@ -272,29 +278,27 @@ class ViewController: UIViewController, UIApplicationDelegate{
             {
                  winningAmount =  currentBet * 1
             }
-            print("WIN! :) ")
-            print("Bet Amount: " + String(currentBet))
-            print("Winning Amount: " + String(winningAmount))
-               
-            message = "YOU WIN!!!"
+            message = "YOU WON $" + String(winningAmount) + " 😄"
             
             currentCredit = currentCredit + winningAmount
             currentJackpot = currentJackpot - winningAmount
             
-            db.update(payout_amount: Double(currentJackpot))
+            if (winningAmount > highest_winning){
+              highest_winning = winningAmount
+            }
+            
+            db.update(payout_amount: Double(currentJackpot), credit: Double(currentCredit), highest_winning: Double(highest_winning))
             
             return
         }
         else
         {
-            message = "Sorry, try again!!!"
+            message = "YOU LOST $" + String(currentBet) + " 😢"
             
             currentJackpot = currentJackpot + currentBet
-            db.update(payout_amount: Double(currentJackpot))
-            
             currentCredit = currentCredit - currentBet
-
-            print("LOSS! :( ")
+            
+            db.update(payout_amount: Double(currentJackpot), credit: Double(currentCredit),  highest_winning: Double(highest_winning))
         }
 
     }
